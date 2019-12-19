@@ -21,9 +21,12 @@ public class UsersController {
 
     @GetMapping(path = "/users/{id}")
     public User show(@PathVariable int id) {
-        //what id the user is not available????
+        User user = service.findOne(id);
 
-        return service.findOne(id);
+        if (user == null)
+            throw new UserNotFoundException("id - " + id);
+
+        return user;
     }
 
     @PostMapping(path = "/users")
