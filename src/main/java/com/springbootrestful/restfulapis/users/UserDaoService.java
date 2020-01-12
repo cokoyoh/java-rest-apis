@@ -11,12 +11,12 @@ import java.util.List;
 public class UserDaoService {
     private static List<User> users = new ArrayList<>();
 
-    private static int usersCount = 3;
+    private static long usersCount = 3;
 
     static {
-        users.add(new User(1, "John Doe", new Date()));
-        users.add(new User(2, "Jane Doe", new Date()));
-        users.add(new User(3, "Roe Smith", new Date()));
+        users.add(new User(1L, "John Doe", new Date()));
+        users.add(new User(2L, "Jane Doe", new Date()));
+        users.add(new User(3L, "Roe Smith", new Date()));
     }
 
     public List<User> findAll() {
