@@ -1,5 +1,6 @@
 package com.springbootrestful.restfulapis.users;
 
+import com.springbootrestful.restfulapis.entities.User;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
