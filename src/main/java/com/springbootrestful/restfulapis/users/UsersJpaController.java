@@ -1,5 +1,6 @@
 package com.springbootrestful.restfulapis.users;
 
+import com.springbootrestful.restfulapis.entities.Post;
 import com.springbootrestful.restfulapis.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,16 @@ public class UsersJpaController {
             throw new UserNotFoundException("id - " + id);
 
         return user;
+    }
+
+    @GetMapping(path = "/jpa/users/{id}/posts")
+    public List<Post> getPosts(@PathVariable long id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (!user.isPresent())
+            throw new UserNotFoundException("id - " + id);
+
+        return user.get().getPosts();
     }
 
     /*
