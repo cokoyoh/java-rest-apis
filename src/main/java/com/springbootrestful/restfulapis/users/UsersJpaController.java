@@ -2,9 +2,13 @@ package com.springbootrestful.restfulapis.users;
 
 import com.springbootrestful.restfulapis.entities.Post;
 import com.springbootrestful.restfulapis.entities.User;
+import com.springbootrestful.restfulapis.posts.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +17,9 @@ public class UsersJpaController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PostRepository postRepository;
 
     @GetMapping(path = "/jpa/users")
     public List index() {
@@ -31,13 +38,35 @@ public class UsersJpaController {
     }
 
     @GetMapping(path = "/jpa/users/{id}/posts")
-    public List<Post> getPosts(@PathVariable long id) {
+    public List<Post> posts(@PathVariable long id) {
         Optional<User> user = userRepository.findById(id);
 
         if (!user.isPresent())
             throw new UserNotFoundException("id - " + id);
 
         return user.get().getPosts();
+    }
+
+    @PostMapping(path = "/jpa/users/{id}/posts")
+    public ResponseEntity<Object> storePost(@PathVariable long id, @RequestBody Post post) {
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (!optionalUser.isPresent())
+            throw new UserNotFoundException("id - " + id);
+
+        User user = optionalUser.get();
+
+        post.setUser(user);
+
+        postRepository.save(post);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(post.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
     }
 
     /*
